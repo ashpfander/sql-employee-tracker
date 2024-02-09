@@ -1,0 +1,19 @@
+{
+  "name": "sql-employee-tracker",
+  "version": "1.0.0",
+  "description": "use mysql to create an employee tracker",
+  "main": "server.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "sql-employee-tracker"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.9.1"
+  }
+}
