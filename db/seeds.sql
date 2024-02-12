@@ -19,5 +19,5 @@ VALUES ("Beverly", "Barnet", 2, NULL),
        ("Vinny", "Clemente", 3, NULL),
        ("Daria", "Hodges", 4, NULL),
        ("Clifton", "Boyce", 6, NULL),
-       ("Reign", "Elwes", 1, 3),
-       ("Edith", "O'Keefe", 5, 6);
+       ("Reign", "Elwes", 1, 2),
+       ("Edith", "O'Keefe", 5, 4);
