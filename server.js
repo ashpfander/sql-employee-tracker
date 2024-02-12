@@ -14,3 +14,16 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the employees_db database.`)
 );
+
+// Generates starter options to choose from
+inquirer.prompt(
+    {
+        type: 'list',
+        message: 'What would you like to do?',
+        name: 'options',
+        choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
+    }
+)
+.then((answer)
+    // Generates different instances based on which option the user chooses
+)
