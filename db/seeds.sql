@@ -15,9 +15,9 @@ VALUES ("Lead Graphic Designer", 80000, 1),
        ("Financial Planner", 90000, 5);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Reign", "Elwes", 1, 3),
-       ("Beverly", "Barnet", 2, NULL),
+VALUES ("Beverly", "Barnet", 2, NULL),
        ("Vinny", "Clemente", 3, NULL),
        ("Daria", "Hodges", 4, NULL),
-       ("Edith", "O'Keefe", 5, 6),
-       ("Clifton", "Boyce", 6, NULL);
+       ("Clifton", "Boyce", 6, NULL),
+       ("Reign", "Elwes", 1, 3),
+       ("Edith", "O'Keefe", 5, 6);
