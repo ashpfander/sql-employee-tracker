@@ -16,14 +16,33 @@ const db = mysql.createConnection(
 );
 
 // Generates starter options to choose from
-inquirer.prompt(
-    {
-        type: 'list',
-        message: 'What would you like to do?',
-        name: 'options',
-        choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
-    }
-)
-.then((answer)
-    // Generates different instances based on which option the user chooses
-)
+function promptOptions() {
+    inquirer.prompt(
+        {
+            type: 'list',
+            message: 'What would you like to do?',
+            name: 'options',
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Exit']
+        }
+    )
+    .then((answer) => {
+        // Generates different instances based on which option the user chooses
+        if (answer.options === 'View all Departments') {
+            const sql = `SELECT * FROM department`;
+  
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                } else {
+                    console.log('Viewing all Departments');
+                    console.table(result);
+                    // Re-prompts the other options
+                    promptOptions();
+                }
+            });
+        }
+    })
+}
+
+promptOptions();
