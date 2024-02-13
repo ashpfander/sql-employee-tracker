@@ -79,6 +79,30 @@ function promptOptions() {
                 }
             });
         }
+        else if (answer.options === 'Add a Department') {
+            inquirer.prompt(
+                {
+                    type: 'input',
+                    message: 'What is the department name?',
+                    name: 'department'
+                }
+            )
+            .then((answer) => {
+                const sql = `INSERT INTO department (department_name)
+                VALUES ("${answer.department}")`;
+  
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    } else {
+                        console.log('Department has been added');
+                        // Re-prompts the other options
+                        promptOptions();
+                    }
+                });
+            })
+        }
     })
 }
 
