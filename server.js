@@ -43,9 +43,9 @@ function promptOptions() {
             });
         }
         else if (answer.options === 'View all Roles') {
-            const sql = `SELECT role.title, role.role_id, department.department_name, role.salary
-            FROM role
-            INNER JOIN department ON role.department_id=department.department_id`;
+            const sql = `SELECT r.title, r.role_id, d.department_name, r.salary
+            FROM role r
+            INNER JOIN department d ON r.department_id=d.department_id`;
   
             db.query(sql, (err, result) => {
                 if (err) {
@@ -53,6 +53,26 @@ function promptOptions() {
                     return;
                 } else {
                     console.log('Viewing all Roles');
+                    console.table(result);
+                    // Re-prompts the other options
+                    promptOptions();
+                }
+            });
+        }
+        else if (answer.options === 'View all Employees') {
+            const sql = `SELECT e.employee_id, e.first_name, e.last_name, r.title, d.department_name, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name
+            FROM employee e
+            INNER JOIN role r ON e.role_id=r.role_id
+            INNER JOIN department d ON r.department_id=d.department_id
+            LEFT JOIN employee m ON e.manager_id=m.employee_id
+            ORDER BY e.employee_id`;
+  
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                } else {
+                    console.log('Viewing all Employees');
                     console.table(result);
                     // Re-prompts the other options
                     promptOptions();
