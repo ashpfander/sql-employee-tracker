@@ -42,6 +42,23 @@ function promptOptions() {
                 }
             });
         }
+        else if (answer.options === 'View all Roles') {
+            const sql = `SELECT role.title, role.role_id, department.department_name, role.salary
+            FROM role
+            INNER JOIN department ON role.department_id=department.department_id`;
+  
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                } else {
+                    console.log('Viewing all Roles');
+                    console.table(result);
+                    // Re-prompts the other options
+                    promptOptions();
+                }
+            });
+        }
     })
 }
 
