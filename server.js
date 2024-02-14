@@ -28,7 +28,8 @@ function promptOptions() {
     .then((answer) => {
         // Generates different instances based on which option the user chooses
         if (answer.options === 'View all Departments') {
-            const sql = `SELECT * FROM department`;
+            const sql = `SELECT * FROM department
+            ORDER BY department_id`;
   
             db.query(sql, (err, result) => {
                 if (err) {
@@ -45,7 +46,8 @@ function promptOptions() {
         else if (answer.options === 'View all Roles') {
             const sql = `SELECT r.title, r.role_id, d.department_name, r.salary
             FROM role r
-            INNER JOIN department d ON r.department_id=d.department_id`;
+            INNER JOIN department d ON r.department_id=d.department_id
+            ORDER BY r.role_id`;
   
             db.query(sql, (err, result) => {
                 if (err) {
@@ -101,6 +103,52 @@ function promptOptions() {
                         promptOptions();
                     }
                 });
+            })
+        }
+        else if (answer.options === 'Add a Role') {
+            // Queries the database for the department names
+            db.query('SELECT department_id, department_name FROM department', (err, results) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                
+                const departmentChoices = results.map(row => ({ name: row.department_name, value: row.department_id }));
+
+                inquirer.prompt([
+                    {
+                        type: 'input',
+                        message: 'What is the role?',
+                        name: 'role'
+                    },
+                    {
+                        type: 'input',
+                        message: 'What is the salary for this role?',
+                        name: 'salary'
+                    },
+                    {
+                        type: 'list',
+                        message: 'What department does this role belong to?',
+                        name: 'department',
+                        choices: departmentChoices
+                    }
+                ])
+                .then((answer) => {
+                    // Adds new role into the role table with corresponding values
+                    const sql = `INSERT INTO role (title, salary, department_id)
+                    VALUES ("${answer.role}", ${answer.salary}, ${answer.department})`;
+  
+                    db.query(sql, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            console.log('Role has been added');
+                            // Re-prompts the other options
+                            promptOptions();
+                        }
+                    });
+                })
             })
         }
     })
