@@ -153,14 +153,14 @@ function promptOptions() {
         }
         else if (answer.options === 'Add an Employee') {
             // Queries the database for the roles
-            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name
+            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
             FROM role r
             INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                console.log(results);
+
                 const roleChoices = results.map(row => ({ name: row.role, value: row.role_id }));
                 const managerChoices = results.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
 
@@ -185,7 +185,7 @@ function promptOptions() {
                         type: 'list',
                         message: 'Do they have a manager?',
                         name: 'manager',
-                        choices: [managerChoices, 'NULL']
+                        choices: [...managerChoices, 'NULL']
                     }
                 ])
                 .then((answer) => {
