@@ -152,7 +152,7 @@ function promptOptions() {
             })
         }
         else if (answer.options === 'Add an Employee') {
-            // Queries the database for the roles
+            // Queries the database for the roles and employee names
             db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
             FROM role r
             INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
@@ -189,7 +189,7 @@ function promptOptions() {
                     }
                 ])
                 .then((answer) => {
-                    // Adds new role into the role table with corresponding values
+                    // Adds new employee into the employee table with corresponding values
                     const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
                     VALUES ("${answer.first_name}", "${answer.last_name}", ${answer.role}, ${answer.manager})`;
   
@@ -207,7 +207,7 @@ function promptOptions() {
             })
         }
         else if (answer.options === 'Update an Employee Role') {
-            // Queries the database for the roles
+            // Queries the database for the roles and employee names
             db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
             FROM role r
             INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
@@ -240,7 +240,7 @@ function promptOptions() {
                     }
                 ])
                 .then((answer) => {
-                    // Adds new role into the role table with corresponding values
+                    // Updates the selected employee's role and manager
                     const sql = `UPDATE employee
                     SET role_id = ${answer.role}, manager_id = ${answer.manager}
                     WHERE employee_id = ${answer.employee}`;
@@ -257,6 +257,11 @@ function promptOptions() {
                     });
                 })
             })
+        }
+        else if (answer.options === 'Exit') {
+            // Exits the mysql database
+            db.end();
+            console.log('Bye!');
         }
     })
 }
