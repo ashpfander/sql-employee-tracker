@@ -206,6 +206,58 @@ function promptOptions() {
                 })
             })
         }
+        else if (answer.options === 'Update an Employee Role') {
+            // Queries the database for the roles
+            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
+            FROM role r
+            INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                const roleChoices = results.map(row => ({ name: row.role, value: row.role_id }));
+                const employeeChoices = results.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
+
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        message: 'Which employee would you like to update?',
+                        name: 'employee',
+                        choices: employeeChoices
+                    },
+                    {
+                        type: 'list',
+                        message: 'What is their new role?',
+                        name: 'role',
+                        choices: roleChoices
+                    },
+                    {
+                        type: 'list',
+                        message: 'Who is their new manager?',
+                        name: 'manager',
+                        choices: [...employeeChoices, 'NULL']
+                    }
+                ])
+                .then((answer) => {
+                    // Adds new role into the role table with corresponding values
+                    const sql = `UPDATE employee
+                    SET role_id = ${answer.role}, manager_id = ${answer.manager}
+                    WHERE employee_id = ${answer.employee}`;
+  
+                    db.query(sql, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            console.log('Employee has been updated');
+                            // Re-prompts the other options
+                            promptOptions();
+                        }
+                    });
+                })
+            })
+        }
     })
 }
 
