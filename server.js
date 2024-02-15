@@ -151,6 +151,61 @@ function promptOptions() {
                 })
             })
         }
+        else if (answer.options === 'Add an Employee') {
+            // Queries the database for the roles
+            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name
+            FROM role r
+            INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log(results);
+                const roleChoices = results.map(row => ({ name: row.role, value: row.role_id }));
+                const managerChoices = results.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
+
+                inquirer.prompt([
+                    {
+                        type: 'input',
+                        message: 'What is their first name?',
+                        name: 'first_name'
+                    },
+                    {
+                        type: 'input',
+                        message: 'What is their last name?',
+                        name: 'last_name'
+                    },
+                    {
+                        type: 'list',
+                        message: 'What is their role?',
+                        name: 'role',
+                        choices: roleChoices
+                    },
+                    {
+                        type: 'list',
+                        message: 'Do they have a manager?',
+                        name: 'manager',
+                        choices: [managerChoices, 'NULL']
+                    }
+                ])
+                .then((answer) => {
+                    // Adds new role into the role table with corresponding values
+                    const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                    VALUES ("${answer.first_name}", "${answer.last_name}", ${answer.role}, ${answer.manager})`;
+  
+                    db.query(sql, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            console.log('Employee has been added');
+                            // Re-prompts the other options
+                            promptOptions();
+                        }
+                    });
+                })
+            })
+        }
     })
 }
 
