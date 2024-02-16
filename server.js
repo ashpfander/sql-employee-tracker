@@ -152,17 +152,22 @@ function promptOptions() {
             })
         }
         else if (answer.options === 'Add an Employee') {
-            // Queries the database for the roles and employee names
-            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
-            FROM role r
-            INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
+            // Queries the database for the roles and employee names but separately
+            db.query(`SELECT r.role_id, r.title AS role FROM role r`, (err, roleResults) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-
-                const roleChoices = results.map(row => ({ name: row.role, value: row.role_id }));
-                const managerChoices = results.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
+            
+                const roleChoices = roleResults.map(row => ({ name: row.role, value: row.role_id }));
+            
+                db.query(`SELECT e.first_name, e.last_name, e.employee_id FROM employee e`, (err, employeeResults) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+            
+                    const managerChoices = employeeResults.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
 
                 inquirer.prompt([
                     {
@@ -204,20 +209,26 @@ function promptOptions() {
                         }
                     });
                 })
-            })
+                });
+            });
         }
         else if (answer.options === 'Update an Employee Role') {
             // Queries the database for the roles and employee names
-            db.query(`SELECT r.role_id, r.title AS role, e.first_name, e.last_name, e.employee_id
-            FROM role r
-            INNER JOIN employee e ON r.role_id = e.role_id`, (err, results) => {
+            db.query(`SELECT r.role_id, r.title AS role FROM role r`, (err, roleResults) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-
-                const roleChoices = results.map(row => ({ name: row.role, value: row.role_id }));
-                const employeeChoices = results.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
+            
+                const roleChoices = roleResults.map(row => ({ name: row.role, value: row.role_id }));
+            
+                db.query(`SELECT e.first_name, e.last_name, e.employee_id FROM employee e`, (err, employeeResults) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+            
+                    const employeeChoices = employeeResults.map(row => ({ name: `${row.first_name} ${row.last_name}`, value: row.employee_id }));
 
                 inquirer.prompt([
                     {
@@ -255,6 +266,7 @@ function promptOptions() {
                             promptOptions();
                         }
                     });
+                })
                 })
             })
         }
