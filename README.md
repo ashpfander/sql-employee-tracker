@@ -36,7 +36,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ```
 
 ## Walkthrough Video
-[MySQL Employee Tracker Walkthrough Video]()
+[MySQL Employee Tracker Walkthrough Video](https://drive.google.com/file/d/1JqY6gRVFbjyb0xG1SnNXuv5Egx590Ib-/view)
 
 ## Table of Contents
 
